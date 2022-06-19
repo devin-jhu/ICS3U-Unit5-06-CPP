@@ -1,38 +1,55 @@
 // Copyright (C) 2022 Devin Jhu All rights reserved
 //
 // Created by Devin Jhu
-// Created on May 2022
-// The loop adder
+// Created on June 2022
+// The rounder
 
 #include <iostream>
-#include <random>
+#include <string>
+#include <cmath>
+
+
+void Rounding(float &number, int roundTo) {
+    // rounds the users number to their desired decimal place
+
+    int roundedNumber;
+    roundedNumber = pow(10, roundTo);
+
+    // https://www.geeksforgeeks.org/static_cast-in-c-type-casting-operators/
+    number = (static_cast<float>(static_cast<int>(number * roundedNumber + 0.5))
+        / roundedNumber);
+}
+
 
 int main() {
-    // this function finds the average of 10 random numbers
+    // Takes input, passes to function, then outputs the number
 
-    int numberArray[10];
-    int randomNumber;
-    float average;
+    std::string numberInput;
+    std::string decimalString;
+    float number;
+    int decimal;
 
-    // random seed
-    std::random_device rseed;
-    std::mt19937 rgen(rseed());  // mersenne twister
-    std::uniform_int_distribution<int> idist(0, 100);  // random from 0 - 100
+    std::cout << "This program rounds numbers" << std::endl;
 
-    std::cout << "The random number average finder" << std::endl;
+    // input
+    std::cout << "Enter number: ";
+    std::cin >> numberInput;
+    std::cout << "Enter decimal places to round to: ";
+    std::cin >> decimalString;
 
     // process and output
-    for (int counter = 0; counter < 10; counter++) {
-        randomNumber = idist(rgen);
-        numberArray[counter] = randomNumber;
-        std::cout << "Random number: " << randomNumber << std::endl;
+    try {
+        number = std::stof(numberInput);
+        decimal = std::stoi(decimalString);
+        if (decimal >= 0) {
+            Rounding(number, decimal);
+            std::cout << "\nThe rounded number is " << number << std::endl;
+        } else {
+            std::cout << "not a number" << std::endl;
+        }
+    } catch (std::invalid_argument) {
+        std::cout << "not a number" << std::endl;
     }
-
-    average = std::accumulate(std::begin(numberArray), std::end(numberArray),
-        0, std::plus<int>());
-    average /= 10;
-
-    std::cout << "\nThe average is " << average << "." << std::endl;
 
     std::cout << "\nDone." << std::endl;
 }
